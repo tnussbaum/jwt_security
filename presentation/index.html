@@ -1,0 +1,521 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank">
+  <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+
+<body style="opacity: 0">
+
+  <slides class="layout-widescreen">
+
+    <slide class="title-slide segue dark nobackground">
+      <aside class="gdbar"><img src="images/HMBlogo.png"></aside>
+      <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+      <hgroup class="auto-fadein">
+        <h1 data-config-title>
+          <!-- populated from slide_config.json -->
+        </h1>
+        <h2 data-config-subtitle>
+          <!-- populated from slide_config.json -->
+        </h2>
+        <p data-config-presenter>
+          <!-- populated from slide_config.json -->
+        </p>
+      </hgroup>
+    </slide>
+    <slide>
+      <hgroup>
+        <h2>About</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Director of Java practice</li>
+          <li>HMB, Mettler Toledo, A&amp;F, ...</li>
+          <li>Java, .NET, Python, Node.js</li>
+          <li>Megan, Doug (11), Greg (9), Lainey(5)</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JSON Web Tokens (JWT)</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>The basics</li>
+          <li>Use for security</li>
+          <li>Comparisons with similar technologies</li>
+          <li>Supporting libraries</li>
+          <li>Example with Spring Security</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>JSON Web Tokens (JWT) - IETF RFC7519</li>
+          <li>Javascript Object Signing &amp; Encryption (JOSE)</li>
+          <li>Benefits
+            <ul>
+              <li>Universal</li>
+              <li>Self-contained</li>
+              <li>Transportable</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+    <slide>
+      <article>
+        <div class="flexbox vcenter big">
+          <pre data-lang="text">
+            eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+            .eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiUk9MRV9VU0VS
+            LFJPTEVfQURNSU4iLCJpc3MiOiJobWJuZXQuY29tIiwiZ
+            XhwIjoxNDc5MzIzNDAyLCJpYXQiOjE0NzkzMjMxMDJ9
+            .3_hdiiZdVTFknffAg4IRMr8smQsCA-ItcCje3kKw4OM
+          </pre>
+        </div>
+      </article>
+    </slide>
+    <slide>
+      <hgroup>
+        <h2>JWT Structure</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Three parts
+            <ul>
+              <li>Header
+              </li>
+              <li>Payload
+              </li>
+              <li>Signature
+              </li>
+            </ul>
+          </li>
+          <li>Dotted notation - header.payload.signature</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Header</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>JSON document</li>
+          <li>Two key bits of information
+            <ul>
+              <li>typ: JWT</li>
+              <li>alg:
+                <ul>
+                  <li>HS256 - HMAC with SHA-256 hash</li>
+                  <li>RS256 - RSA signature with SHA-256 hash</li>
+                  <li>Verify data integrity and authentication</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>Header document is base64 encoded</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <article>
+        <div class="flexbox vcenter big">
+          <pre class="prettyprint" data-lang="json">
+            { 
+              "typ": "JWT", 
+              "alg": "HS256" 
+            }
+          </pre>
+          <pre class="prettyprint" data-lang="text">
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+          </pre>
+        </div>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Payload</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>JSON document</li>
+          <li>Claims - the "data" in the token</li>
+          <li>Claim types
+            <ul>
+              <li>Registered</li>
+              <li>Public</li>
+              <li>Private</li>
+            </ul>
+          </li>
+          <li>Payload document is base64 encoded</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Registered Claims</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>StringOrURI type
+            <ul>
+              <li>iss - Issuer</li>
+              <li>sub - Subject</li>
+              <li>aud - Audience</li>
+            </ul>
+          </li>
+          <li>NumericDate type (UNIX timestamp)
+            <ul>
+              <li>exp - Expiration Time</li>
+              <li>nbf - Not Before</li>
+              <li>iat - Issued At</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Registered Claims - cont.</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>jti - JWT ID</li>
+          <li>Unique identifier for the given issuance of the token</li>
+          <li>Case-sensitive string</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Public Claims</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Names publicly agreed to as standard</li>
+          <li>http://www.iana.org/assignments/jwt/jwt.xhtml</li>
+          <li>name, nickname, email, birthdate, phone_number, etc.</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Private Claims</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Any key/value that works in JSON - numbers, strings, dates, objects, etc</li>
+          <li>Only requirement is that the issuer is responsible for communicating and handling collisions with other standards/issuers</li>
+          <li>Use with caution!</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <article>
+        <div class="flexbox vcenter big">
+          <pre class="prettyprint" data-lang="json">
+            { 
+              "iss": "hmbnet.com", 
+              "sub": "tnussbaum", 
+              "exp": "1483246800", 
+              "name": "Todd Nussbaum", 
+              "admin": false 
+            }
+          </pre>
+          <pre data-lang="text">
+            eyJpc3MiOiAiaG1ibmV0LmNvbSIsInN1YiI6ICJ0bn 
+            Vzc2JhdW0iLCJleHAiOiAiMTQ4MzI0NjgwMCIsIm5h 
+            bWUiOiAiVG9kZCBOdXNzYmF1bSIsImFkbWluIjogZm
+            Fsc2V9
+          </pre>
+        </div>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT Signature</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Hash of header and payload with known secret</li>
+          <li>Using algorithm identified in the header</li>
+          <li>Secret should only be known by parties who need to validate tokens</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <article>
+        <div class="flexbox vcenter big">
+          <pre class="prettyprint" data-lang="javascript">
+            var headerDoc = '{"typ":"JWT","alg":"HS256"}'; 
+            var payloadDoc = '{ ... }'; 
+            var encodedDoc = base64UrlEncode(headerDoc)+
+                             "."+
+                             base64UrlEncode(payloadDoc);
+            var jwtSig = HMACSHA256(encodedDoc, "MySuperSecretKey"); 
+            var jwt = encodedDoc+"."+jwtSig;
+          </pre>
+        </div>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT use for security</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Authentication/authorization in stateless microservice/SOA environment</li>
+          <li>Similar to an API token, but provides more flexibility</li>
+          <li>Stored locally, and sent as a header to access protected URIs
+            <ul>
+              <li>Using <b>Authorization: Bearer &lt;jwt&gt;</b> scheme is becoming a common practice, but can be sent under any header</li>
+              <li>Example will use X-Auth-Token header</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT in stateless microservice/SOA environment</h2>
+      </hgroup>
+      <article>
+        <img src="images/jwtApiExample.png" alt="Description" title="Description">
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Considerations</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Other cases
+            <ul>
+              <li>Tokens with IDs - blacklisting</li>
+              <li>Hiding data in tokens - encrypting claims</li>
+              <li>Nesting - tokens within tokens</li>
+            </ul>
+          </li>
+          <li>Other approaches
+            <ul>
+              <li>One-time identification - password reset, email verification</li>
+              <li>"Friends" authentication schemes - federation, shared roles</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Comparisons to similar technologies</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Traditional HTTP Session IDs/Cookies
+            <ul>
+              <li>Easier to code</li>
+              <li>Centralized data store</li>
+              <li>Stale sessions</li>
+            </ul>
+          </li>
+          <li>SAML Assertions
+            <ul>
+              <li>Well-accepted standard (2001)</li>
+              <li>Complex XML structure</li>
+              <li>Designed for federation of security solutions</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>Java libraries for working with JWT</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>For libraries, check out http://jwt.io</li>
+          <li>Java-JWT (auth0.com, identity platform)</li>
+          <li>Jose.4.j (Ping Identity)</li>
+          <li>Nimbus JOSE-JWT (OpenID Connect)</li>
+          <li>JJWT (Stormpath, identity platform)</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Spring Security example</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Simple demo app that implements our stateless example</li>
+          <li>Components
+            <ul>
+              <li>Spring Boot</li>
+              <li>JJWT</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Spring Security Request Flow</h2>
+      </hgroup>
+      <article>
+        <img src="images/springRequestFlow.png" alt="Description" title="Description">
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Spring Security example</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Model classes
+            <ul>
+              <li>AuthRequest &amp; AuthResponse</li>
+              <li>JwtUserDetails</li>
+            </ul>
+          </li>
+          <li>Controller classes
+            <ul>
+              <li>AuthenticationController</li>
+              <li>ProtectedController</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Spring Security example</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Config
+            <ul>
+              <li>WebSecurityConfiguration</li>
+              <li>application.properties</li>
+            </ul>
+          </li>
+          <li>Utility classes
+            <ul>
+              <li>AuthenticationTokenFilter</li>
+              <li>TokenUtils</li>
+            </ul>
+          </li>
+          <li>Service class
+            <ul>
+              <li>SecurityService</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <article>
+        <div class='flexbox vcenter big'>
+          Demo
+        </div>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>JWT - Summary</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>Simple structure - open to view, protected against manipulation</li>
+          <li>Straight-forward approach to API security, compares favorably against other technologies</li>
+          <li>Integration with various Web/API approaches is supported and approachable</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide>
+      <hgroup>
+        <h2>Sources</h2>
+      </hgroup>
+      <article>
+        <ul>
+          <li>JSON Web Token IETF RFC - RFC7519</li>
+          <li>JSON Web Token Introduction - jwt.io</li>
+          <li>Anatomy of a JSON Web Token - scotch.io</li>
+          <li>JSON Web Tokens as API keys - auth0.com</li>
+        </ul>
+      </article>
+    </slide>
+
+    <slide class="thank-you-slide segue nobackground">
+      <aside class="gdbar right"><img src="images/HMBlogo.png"></aside>
+      <article class="flexbox vleft auto-fadein">
+        <h2>Thank You!</h2>
+      </article>
+      <p class="auto-fadein" data-config-contact>
+        <!-- populated from slide_config.json -->
+      </p>
+    </slide>
+
+    <slide class="backdrop"></slide>
+
+  </slides>
+
+  <!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+
+</html>
